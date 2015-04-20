@@ -74,8 +74,8 @@ headOr ::
   a
   -> List a
   -> a
-headOr =
-  error "todo"
+headOr _ (h :. _)  = h
+headOr d Nil = d
 
 -- | The product of the elements of a list.
 --
@@ -87,8 +87,7 @@ headOr =
 product ::
   List Int
   -> Int
-product =
-  error "todo"
+product = foldRight (*) 1
 
 -- | Sum the elements of the list.
 --
@@ -102,8 +101,7 @@ product =
 sum ::
   List Int
   -> Int
-sum =
-  error "todo"
+sum = foldRight (+) 0
 
 -- | Return the length of the list.
 --
@@ -114,8 +112,7 @@ sum =
 length ::
   List a
   -> Int
-length =
-  error "todo"
+length = foldRight (\_ a -> a + 1) 0
 
 -- | Map the given function on each element of the list.
 --
@@ -129,8 +126,9 @@ map ::
   (a -> b)
   -> List a
   -> List b
-map =
-  error "todo"
+map f = foldRight (\a bs -> (f a) :. bs) Nil
+-- Is there a solution with foldLeft?
+--map f = foldLeft (\bs a -> (f a) :. bs) Nil
 
 -- | Return elements satisfying the given predicate.
 --
@@ -146,8 +144,7 @@ filter ::
   (a -> Bool)
   -> List a
   -> List a
-filter =
-  error "todo"
+filter p = foldRight (\a bs -> if p a then a :. bs else bs) Nil
 
 -- | Append two lists to a new list.
 --
@@ -165,8 +162,7 @@ filter =
   List a
   -> List a
   -> List a
-(++) =
-  error "todo"
+(++) as1 as2 = foldRight (:.) as2 as1
 
 infixr 5 ++
 
@@ -183,8 +179,7 @@ infixr 5 ++
 flatten ::
   List (List a)
   -> List a
-flatten =
-  error "todo"
+flatten = foldRight (++) Nil
 
 -- | Map a function then flatten to a list.
 --
@@ -200,8 +195,7 @@ flatMap ::
   (a -> List b)
   -> List a
   -> List b
-flatMap =
-  error "todo"
+flatMap f = flatten.map f
 
 -- | Flatten a list of lists to a list (again).
 -- HOWEVER, this time use the /flatMap/ function that you just wrote.
@@ -210,8 +204,7 @@ flatMap =
 flattenAgain ::
   List (List a)
   -> List a
-flattenAgain =
-  error "todo"
+flattenAgain = flatMap (\as -> as)
 
 -- | Convert a list of optional values to an optional list of values.
 --
